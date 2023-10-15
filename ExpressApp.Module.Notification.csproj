@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <Deterministic>false</Deterministic>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Configurations>Debug;Release;EasyTest</Configurations>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Images\notifications.svg" />
+    <None Remove="Images\notifications_active.svg" />
+    <None Remove="Model.DesignedDiffs.xafml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\notifications.svg" />
+    <EmbeddedResource Include="Images\notifications_active.svg" />
+    <EmbeddedResource Include="Model.DesignedDiffs.xafml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DevExpress.ExpressApp" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Blazor" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.CloneObject.Xpo" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.ConditionalAppearance" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Objects" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Validation" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.ViewVariantsModule" Version="23.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Xpo" Version="23.1.4" />
+    <PackageReference Include="DevExpress.Persistent.Base" Version="23.1.4" />
+    <PackageReference Include="DevExpress.Persistent.BaseImpl.Xpo" Version="23.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ExpressApp.Library\ExpressApp.Library.csproj" />
+  </ItemGroup>
+  
+</Project>
