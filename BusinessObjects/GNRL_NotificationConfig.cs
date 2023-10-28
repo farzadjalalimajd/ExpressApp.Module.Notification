@@ -29,6 +29,13 @@ public abstract class GNRL_NotificationConfig : BaseObject
     {
     }
 
+    public override void AfterConstruction()
+    {
+        base.AfterConstruction();
+
+        Enabled = true;
+    }
+
     [RuleRequiredField]
     [Size(SizeAttribute.DefaultStringMappingFieldSize)]
     [Persistent("Name")]
@@ -37,6 +44,14 @@ public abstract class GNRL_NotificationConfig : BaseObject
     {
         get { return GetPropertyValue<string>(); }
         set { SetPropertyValue(nameof(Name), value); }
+    }
+
+    [Persistent("Enabled")]
+    [DbType("bit")]
+    public bool Enabled
+    {
+        get { return GetPropertyValue<bool>(); }
+        set { SetPropertyValue(nameof(Enabled), value); }
     }
 
     [RuleRequiredField]
