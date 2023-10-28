@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>XA Notification Modul</Title>
     <RepositoryUrl>https://github.com/FarzadJM/ExpressApp.Module.Notification</RepositoryUrl>
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\notifications.svg" />
