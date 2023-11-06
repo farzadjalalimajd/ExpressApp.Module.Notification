@@ -24,11 +24,6 @@ public class NotificationManagerService : INotificationService
             return;
         }
 
-        if (fromUserId is null)
-        {
-            return;
-        }
-
         if (toUserId is null)
         {
             return;
@@ -39,13 +34,18 @@ public class NotificationManagerService : INotificationService
         notification.SetMemberValue(nameof(GNRL_Notification.Message), message);
         notification.SetMemberValue(nameof(GNRL_Notification.ObjectHandle), objectHandle);
         notification.SetMemberValue(nameof(GNRL_Notification.ToUser), objectSpace.GetObjectByKey<PermissionPolicyUser>(toUserId));
-        notification.SetMemberValue(nameof(GNRL_Notification.FromUser), objectSpace.GetObjectByKey<PermissionPolicyUser>(fromUserId));
         notification.SetMemberValue(nameof(GNRL_Notification.DateCreated), DateTime.Now);
         notification.SetMemberValue(nameof(GNRL_Notification.Level), level);
+
+        if (fromUserId is not null)
+        {
+            notification.SetMemberValue(nameof(GNRL_Notification.FromUser), objectSpace.GetObjectByKey<PermissionPolicyUser>(fromUserId));
+        }
+
         objectSpace.CommitChanges();
 
         Task.Run(() => {
-            notificationDeliveryManager.NotifyNew(notification.Oid, notification.Message, notification.FromUser.Oid, notification.ToUser.Oid, notification.ObjectHandle);
+            notificationDeliveryManager.NotifyNew(notification.Oid, notification.Message, notification.FromUser?.Oid, notification.ToUser.Oid, notification.ObjectHandle);
         });
     }
 
@@ -61,11 +61,6 @@ public class NotificationManagerService : INotificationService
                 continue;
             }
 
-            if (item.FromUserId is null)
-            {
-                continue;
-            }
-
             if (item.ToUserId is null)
             {
                 continue;
@@ -75,9 +70,13 @@ public class NotificationManagerService : INotificationService
             notification.SetMemberValue(nameof(GNRL_Notification.Message), item.Message);
             notification.SetMemberValue(nameof(GNRL_Notification.ObjectHandle), item.ObjectHandle);
             notification.SetMemberValue(nameof(GNRL_Notification.ToUser), objectSpace.GetObjectByKey<PermissionPolicyUser>(item.ToUserId));
-            notification.SetMemberValue(nameof(GNRL_Notification.FromUser), objectSpace.GetObjectByKey<PermissionPolicyUser>(item.FromUserId));
             notification.SetMemberValue(nameof(GNRL_Notification.DateCreated), DateTime.Now);
             notification.SetMemberValue(nameof(GNRL_Notification.Level), item.Level);
+
+            if (item.FromUserId is not null)
+            {
+                notification.SetMemberValue(nameof(GNRL_Notification.FromUser), objectSpace.GetObjectByKey<PermissionPolicyUser>(item.FromUserId));
+            }
 
             newItems.Add(notification);
         }
@@ -87,7 +86,7 @@ public class NotificationManagerService : INotificationService
         Task.Run(() => {
             foreach (var item in newItems)
             {
-                notificationDeliveryManager.NotifyNew(item.Oid, item.Message, item.FromUser.Oid, item.ToUser.Oid, item.ObjectHandle);
+                notificationDeliveryManager.NotifyNew(item.Oid, item.Message, item.FromUser?.Oid, item.ToUser.Oid, item.ObjectHandle);
             }
         });
     }

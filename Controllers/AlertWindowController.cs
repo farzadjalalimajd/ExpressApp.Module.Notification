@@ -49,12 +49,10 @@ namespace ExpressApp.Module.Notification.Controllers
             {
                 Thread.Sleep(TimeSpan.FromMinutes(1));
 
-                var c1 = CriteriaOperator.Parse($"IsCurrentUserId([{nameof(GNRL_Notification.ToUser)}.{nameof(PermissionPolicyUser.Oid)}])");
-                var c2 = CriteriaOperator.Parse($"[{nameof(GNRL_Notification.IsDelivered)}] = False");
-                var c3 = new GroupOperator(c1, c2);
+                var c1 = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(Application.Security.UserId) && x.IsDeliverd == false);
 
                 var objectSpace = Application?.CreateObjectSpace(typeof(GNRL_Notification));
-                var notifications = objectSpace?.GetObjects<GNRL_Notification>(c3);
+                var notifications = objectSpace?.GetObjects<GNRL_Notification>(c1);
 
                 if (notifications is not null)
                 {
@@ -62,7 +60,7 @@ namespace ExpressApp.Module.Notification.Controllers
                     {
                         try
                         {
-                            notification.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
+                            notification.SetMemberValue(nameof(GNRL_Notification.IsDeliverd), true);
                             objectSpace.CommitChanges();
                         }
                         catch (Exception)
@@ -91,7 +89,7 @@ namespace ExpressApp.Module.Notification.Controllers
                 var notification = objectSpace.GetObjectByKey<GNRL_Notification>(e.Oid);
                 try
                 {
-                    notification.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
+                    notification.SetMemberValue(nameof(GNRL_Notification.IsDeliverd), true);
                     objectSpace.CommitChanges();
                 }
                 catch (Exception)

@@ -1,11 +1,11 @@
-﻿using DevExpress.ExpressApp.DC;
-using DevExpress.Persistent.Base;
+﻿using DevExpress.Persistent.Base;
 using DevExpress.Xpo;
 
 namespace ExpressApp.Module.Notification.BusinessObjects;
 
-[ImageName("Actions_Settings")]
-[XafDisplayName("Notification Schedule")]
+[DefaultClassOptions]
+//[NavigationItem("Settings")]
+[NavigationItem(false)]
 [MapInheritance(MapInheritanceType.ParentTable)]
 public class GNRL_NotificationSchedule : GNRL_NotificationConfig
 {

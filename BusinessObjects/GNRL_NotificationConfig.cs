@@ -13,13 +13,9 @@ using System.Runtime.Serialization;
 
 namespace ExpressApp.Module.Notification.BusinessObjects;
 
-[ModelDefault("IsCloneable", "True")]
-[Appearance("", AppearanceItemType.ViewItem, "[TargetType] Is Null", Enabled = false, TargetItems = nameof(Criteria))]
-[ImageName("Actions_Settings")]
 [DefaultClassOptions]
 [NavigationItem(false)]
 [DeferredDeletion(false)]
-[XafDisplayName("Notification Config")]
 [Persistent($"gnrl.NotificationConfig")]
 public abstract class GNRL_NotificationConfig : BaseObject
 {
@@ -36,7 +32,6 @@ public abstract class GNRL_NotificationConfig : BaseObject
         Enabled = true;
     }
 
-    [RuleRequiredField]
     [Size(SizeAttribute.DefaultStringMappingFieldSize)]
     [Persistent("Name")]
     [DbType("varchar(200)")]
@@ -54,8 +49,6 @@ public abstract class GNRL_NotificationConfig : BaseObject
         set { SetPropertyValue(nameof(Enabled), value); }
     }
 
-    [RuleRequiredField]
-    [ToolTip("This text will be evaluated by criteria language syntax. You can use 'Target Type' members.")]
     [Size(SizeAttribute.Unlimited)]
     [Persistent("Message")]
     [DbType("varchar(max)")]
@@ -66,7 +59,6 @@ public abstract class GNRL_NotificationConfig : BaseObject
     }
 
     [IgnoreDataMember]
-    [RuleRequiredField]
     [TypeConverter(typeof(SecurityTargetTypeConverter))]
     [ImmediatePostData]
     [NonPersistent]
@@ -113,7 +105,6 @@ public abstract class GNRL_NotificationConfig : BaseObject
     //    }
     //}
 
-    [RuleRequiredField(DefaultContexts.Save, TargetCriteria = "[TargetType] Is Not Null")]
     [CriteriaOptions(nameof(TargetType))]
     [EditorAlias("PopupCriteriaPropertyEditor")]
     [Size(SizeAttribute.Unlimited)]
@@ -125,8 +116,6 @@ public abstract class GNRL_NotificationConfig : BaseObject
         set { SetPropertyValue(nameof(Criteria), value); }
     }
 
-    [RuleRequiredField]
-    [XafDisplayName("Recipients")]
     [Association]
     [DevExpress.Xpo.Aggregated]
     public XPCollection<GNRL_NotificationRecipientConfig> Recipients => GetCollection<GNRL_NotificationRecipientConfig>();
@@ -140,20 +129,4 @@ public abstract class GNRL_NotificationConfig : BaseObject
         get { return GetPropertyValue<string>(); }
         set { SetPropertyValue(nameof(TargetTypeFullName), value); }
     }
-
-    //[Size(SizeAttribute.Unlimited)]
-    //public string MessageSample
-    //{
-    //    get
-    //    {
-    //        try
-    //        {
-    //            return Convert.ToString(Session.Evaluate(TargetType, CriteriaOperator.TryParse(Message), CriteriaOperator.TryParse(string.Empty)));
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            return ex.Message;
-    //        }
-    //    }
-    //}
 }

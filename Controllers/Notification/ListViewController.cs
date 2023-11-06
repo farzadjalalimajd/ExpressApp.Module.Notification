@@ -1,7 +1,6 @@
 ﻿using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.SystemModule;
-using DevExpress.Persistent.BaseImpl.PermissionPolicy;
 using ExpressApp.Module.Notification.Base;
 using ExpressApp.Module.Notification.BusinessObjects;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,16 +26,14 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
         {
             base.OnActivated();
 
-            var c1 = CriteriaOperator.Parse($"IsCurrentUserId([ToUser.Oid])");
-            var c2 = CriteriaOperator.Parse($"[IsDelivered] = False");
-            var c3 = new GroupOperator(c1, c2);
-            
+            var criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(Application.Security.UserId) && x.IsDeliverd == false);
+
             var objectSpace = Application.CreateObjectSpace(typeof(GNRL_Notification));
-            var notifications = objectSpace.GetObjects<GNRL_Notification>(c3);
+            var notifications = objectSpace.GetObjects<GNRL_Notification>(criteria);
             
             foreach (var notification in notifications)
             {
-                notification.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
+                notification.SetMemberValue(nameof(GNRL_Notification.IsDeliverd), true);
             }
 
             try
@@ -80,7 +77,7 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
             if (!ViewCurrentObject.IsSeen)
             {
                 ViewCurrentObject.SetMemberValue(nameof(GNRL_Notification.IsSeen), true);
-                ViewCurrentObject.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
+                ViewCurrentObject.SetMemberValue(nameof(GNRL_Notification.IsDeliverd), true);
 
                 ObjectSpace.CommitChanges();
 

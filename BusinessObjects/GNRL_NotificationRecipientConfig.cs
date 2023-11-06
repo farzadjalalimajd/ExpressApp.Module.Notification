@@ -17,13 +17,9 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 namespace ExpressApp.Module.Notification.BusinessObjects;
 
-[ModelDefault("IsCloneable", "True")]
-[Appearance("", AppearanceItemType.ViewItem, "[TargetType] Is Null", Enabled = false, TargetItems = $"{nameof(Members)};{nameof(Criteria)}")]
-[ImageName("BO_User")]
 [DefaultClassOptions]
 [NavigationItem(false)]
 [DeferredDeletion(false)]
-[XafDisplayName("Notification Recipient Config")]
 [Persistent($"gnrl.NotificationRecipientConfig")]
 public class GNRL_NotificationRecipientConfig : BaseObject, ICheckedListBoxItemsProvider
 {
@@ -101,7 +97,6 @@ public class GNRL_NotificationRecipientConfig : BaseObject, ICheckedListBoxItems
 
     [VisibleInDetailView(false)]
     [CollectionOperationSet(AllowAdd = false, AllowRemove = false)]
-    [XafDisplayName("Recipient Users")]
     public IList<PermissionPolicyUser> RecipientUsers
     {
         get
@@ -111,9 +106,7 @@ public class GNRL_NotificationRecipientConfig : BaseObject, ICheckedListBoxItems
         }
     }
 
-    [XafDisplayName("Notification Config")]
     [Association]
-    [RuleRequiredField]
     [Persistent("NotificationConfig")]
     public GNRL_NotificationConfig NotificationConfig
     {

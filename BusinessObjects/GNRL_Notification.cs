@@ -11,11 +11,8 @@ using System.ComponentModel;
 
 namespace ExpressApp.Module.Notification.BusinessObjects;
 
-[Appearance("", AppearanceItemType.ViewItem, "[IsSeen] = False", FontStyle = System.Drawing.FontStyle.Bold, TargetItems = "*", Context = nameof(AppearanceContext.ListView))]
-[ImageName("notifications")]
 [DeferredDeletion(false)]
 [OptimisticLocking(false)]
-[XafDisplayName("Notification")]
 [Persistent($"gnrl.Notification")]
 public class GNRL_Notification : BaseObject
 {
@@ -28,7 +25,7 @@ public class GNRL_Notification : BaseObject
         base.AfterConstruction();
 
         IsSeen = false;
-        IsDelivered = false;
+        IsDeliverd = false;
         Level = AlertLevel.Information;
     }
 
@@ -43,8 +40,6 @@ public class GNRL_Notification : BaseObject
     }
 
     [VisibleInListView(true)]
-    [ModelDefault("DisplayFormat", "{0:yyyy/M/d}")]
-    [XafDisplayName("Date")]
     [Persistent("DateCreated")]
     [DbType("datetime2(0)")]
     public DateTime DateCreated
@@ -53,8 +48,8 @@ public class GNRL_Notification : BaseObject
         private set { SetPropertyValue(nameof(DateCreated), value); }
     }
 
+    [VisibleInDetailView(false)]
     [VisibleInListView(false)]
-    [XafDisplayName("From")]
     [NoForeignKey]
     [Persistent("FromApplicationUser")]
     public PermissionPolicyUser FromUser
@@ -85,12 +80,12 @@ public class GNRL_Notification : BaseObject
 
     [SecurityBrowsable]
     [Browsable(false)]
-    [Persistent("IsDelivered")]
+    [Persistent("IsDeliverd")]
     [DbType("bit")]
-    public bool IsDelivered
+    public bool IsDeliverd
     {
         get { return GetPropertyValue<bool>(); }
-        private set { SetPropertyValue(nameof(IsDelivered), value); }
+        private set { SetPropertyValue(nameof(IsDeliverd), value); }
     }
 
     [SecurityBrowsable]

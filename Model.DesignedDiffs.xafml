@@ -9,13 +9,45 @@
       </ActionContainer>
     </ActionToContainerMapping>
   </ActionDesign>
-  <Options>
-    <LayoutManagerOptions RequiredFieldMark="*" />
-  </Options>
+  <BOModel>
+    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_Notification" Caption="Notification" ImageName="notifications">
+      <AppearanceRules>
+        <AppearanceRule Id="@0b76b1be-c606-4878-be0c-ef9482c9f0d1" TargetItems="*" Criteria="[IsSeen] = False" Priority="0" FontStyle="Bold" IsNewNode="True" />
+      </AppearanceRules>
+      <OwnMembers>
+        <Member Name="DateCreated" DisplayFormat="{0:yyyy/M/d}" />
+        <Member Name="FromUser" Caption="From" />
+      </OwnMembers>
+    </Class>
+    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" ImageName="Actions_Settings" Caption="Notification Config" IsCloneable="True">
+      <AppearanceRules>
+        <AppearanceRule Id="@8988284a-ff40-4990-98f4-3817bb087af2" TargetItems="Criteria" Criteria="[TargetType] Is Null" Priority="0" Enabled="False" IsNewNode="True" />
+      </AppearanceRules>
+      <OwnMembers>
+        <Member Name="Message" ToolTip="This text will be evaluated by criteria language syntax. You can use 'Target Type' members." />
+      </OwnMembers>
+    </Class>
+    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationRecipientConfig" Caption="Notification Recipient Config" ImageName="BO_User" IsCloneable="True">
+      <AppearanceRules>
+        <AppearanceRule Id="@c86cdfcc-f8a5-4a19-8aef-d197b5267764" TargetItems="Members;Criteria" Criteria="[TargetType] Is Null" Priority="0" Enabled="False" IsNewNode="True" />
+      </AppearanceRules>
+    </Class>
+    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationSchedule" Caption="Notification Schedule" />
+  </BOModel>
   <SchemaModules>
-    <SchemaModule Name="CloneObjectModule" Version="23.1.4.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.1.4.0" IsNewNode="True" />
+    <SchemaModule Name="CloneObjectModule" Version="23.1.6.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.1.6.0" IsNewNode="True" />
   </SchemaModules>
+  <Validation>
+    <Rules>
+      <RuleRequiredField Id="@097f07ce-baf4-4c0b-b2c4-7e44ab306648" TargetPropertyName="NotificationConfig" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationRecipientConfig" TargetContextIDs="Save" IsNewNode="True" />
+      <RuleRequiredField Id="@2768b20c-e60b-4438-8515-5df1998b23a3" TargetPropertyName="TargetType" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" TargetContextIDs="Save" IsNewNode="True" />
+      <RuleRequiredField Id="@44f1a100-713e-4184-bc37-ad02d07e8976" TargetPropertyName="Message" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" TargetContextIDs="Save" IsNewNode="True" />
+      <RuleRequiredField Id="@80c27a30-459f-4b74-900b-a291f7f8f8c7" TargetPropertyName="Criteria" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" TargetContextIDs="Save" TargetCriteria="[TargetType] Is Not Null" IsNewNode="True" />
+      <RuleRequiredField Id="@cad3bad7-474f-4562-b966-43bff8c8c755" TargetPropertyName="Recipients" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" TargetContextIDs="Save" IsNewNode="True" />
+      <RuleRequiredField Id="@cc754c9c-bc72-4836-a033-6fdad6a2d315" TargetPropertyName="Name" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" TargetContextIDs="Save" IsNewNode="True" />
+    </Rules>
+  </Validation>
   <Views>
     <ListView Id="GNRL_Notification_PopUp_ListView" ClassName="ExpressApp.Module.Notification.BusinessObjects.GNRL_Notification" IsNewNode="True">
       <Columns IsNewNode="True">

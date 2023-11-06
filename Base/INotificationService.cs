@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExpressApp.Module.Notification.Base
+﻿namespace ExpressApp.Module.Notification.Base
 {
     public interface INotificationService
     {

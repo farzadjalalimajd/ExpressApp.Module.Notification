@@ -45,7 +45,7 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
                 foreach (var item in objs)
                 {
                     item.SetMemberValue(nameof(GNRL_Notification.IsSeen), true);
-                    item.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
+                    item.SetMemberValue(nameof(GNRL_Notification.IsDeliverd), true);
                 }
             }
 

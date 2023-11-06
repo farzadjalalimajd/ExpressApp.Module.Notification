@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>XA Notification Modul</Title>
     <RepositoryUrl>https://github.com/FarzadJM/ExpressApp.Module.Notification</RepositoryUrl>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\notifications.svg" />
@@ -32,14 +32,11 @@
     <PackageReference Include="DevExpress.ExpressApp.Xpo" Version="23.1.6" />
     <PackageReference Include="DevExpress.Persistent.Base" Version="23.1.6" />
     <PackageReference Include="DevExpress.Persistent.BaseImpl.Xpo" Version="23.1.6" />
+    <PackageReference Include="ExpressApp.Library" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
 	<FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ExpressApp.Library\ExpressApp.Library.csproj" />
   </ItemGroup>
   
 </Project>

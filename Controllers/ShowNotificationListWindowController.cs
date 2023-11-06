@@ -1,30 +1,13 @@
-﻿using DevExpress.CodeParser.Diagnostics;
-using DevExpress.Data.Filtering;
-using DevExpress.Data.Linq.Helpers;
+﻿using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
-using DevExpress.ExpressApp.Editors;
-using DevExpress.ExpressApp.Layout;
-using DevExpress.ExpressApp.MiddleTier;
-using DevExpress.ExpressApp.Model.NodeGenerators;
-using DevExpress.ExpressApp.Security;
 using DevExpress.ExpressApp.SystemModule;
-using DevExpress.ExpressApp.Templates;
-using DevExpress.ExpressApp.Utils;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.PermissionPolicy;
-using DevExpress.Persistent.Validation;
-using DevExpress.Xpo;
 using ExpressApp.Module.Notification.Base;
 using ExpressApp.Module.Notification.BusinessObjects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace ExpressApp.Module.Notification.Controllers
 {
@@ -36,7 +19,6 @@ namespace ExpressApp.Module.Notification.Controllers
 #pragma warning restore IDE0052 // Remove unread private members
         public const string NotificationsActionId = "Notifications";
         private readonly INotificationDelivery notificationDeliveryManager;
-        private readonly ILogger<ShowNotificationListWindowController> logger;
 
         public PopupWindowShowAction NotificationsAction { get; private set; }
 
@@ -72,9 +54,6 @@ namespace ExpressApp.Module.Notification.Controllers
 
         private void NotificationsAction_CustomizePopupWindowParams(object sender, CustomizePopupWindowParamsEventArgs e)
         {
-
-            Tracing.Tracer.LogWarning("FarzadJM");
-
             var listViewId = "GNRL_Notification_PopUp_ListView";
             var objectSpace = Application.CreateObjectSpace(typeof(GNRL_Notification));
             var collectionSource = Application.CreateCollectionSource(objectSpace, typeof(GNRL_Notification), listViewId);
@@ -83,10 +62,9 @@ namespace ExpressApp.Module.Notification.Controllers
         }
 
         [ActivatorUtilitiesConstructor]
-        public ShowNotificationListWindowController(INotificationDelivery notificationDeliveryManager, ILogger<ShowNotificationListWindowController> logger) : this()
+        public ShowNotificationListWindowController(INotificationDelivery notificationDeliveryManager) : this()
         {
             this.notificationDeliveryManager = notificationDeliveryManager;
-            this.logger = logger;
         }
 
         protected override void OnActivated()
@@ -102,7 +80,8 @@ namespace ExpressApp.Module.Notification.Controllers
         private void Callback(object state)
         {
             var objectSpace = Application.CreateObjectSpace(typeof(GNRL_Notification));
-            NotificationCount = objectSpace.GetObjects<GNRL_Notification>(CriteriaOperator.Parse($"IsCurrentUserId([{nameof(GNRL_Notification.ToUser)}.{nameof(PermissionPolicyUser.Oid)}]) And [{nameof(GNRL_Notification.IsSeen)}] = False")).Count;
+            var criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(Application.Security.UserId) && x.IsDeliverd == false);
+            NotificationCount = objectSpace.GetObjects<GNRL_Notification>(criteria).Count;
         }
 
         private void NotificationDeliveryManager_Dismissed(object sender, NotificationDismissedEventArgs e)
