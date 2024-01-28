@@ -3,12 +3,15 @@ using DevExpress.ExpressApp.ConditionalAppearance;
 using DevExpress.ExpressApp.DC;
 using DevExpress.ExpressApp.Editors;
 using DevExpress.ExpressApp.Model;
+using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.Base.Security;
 using DevExpress.Persistent.BaseImpl;
 using DevExpress.Persistent.Validation;
 using DevExpress.Xpo;
+using ExpressApp.Module.Notification.Base;
 using System.ComponentModel;
+using System.Data;
 using System.Runtime.Serialization;
 
 namespace ExpressApp.Module.Notification.BusinessObjects;
@@ -30,6 +33,7 @@ public abstract class GNRL_NotificationConfig : BaseObject
         base.AfterConstruction();
 
         Enabled = true;
+        Level = AlertLevel.Information;
     }
 
     [Size(SizeAttribute.DefaultStringMappingFieldSize)]
@@ -47,6 +51,21 @@ public abstract class GNRL_NotificationConfig : BaseObject
     {
         get { return GetPropertyValue<bool>(); }
         set { SetPropertyValue(nameof(Enabled), value); }
+    }
+
+    [Persistent("HasEmailNotification")]
+    [DbType("bit")]
+    public bool HasEmailNotification
+    {
+        get { return GetPropertyValue<bool>(); }
+        set { SetPropertyValue(nameof(HasEmailNotification), value); }
+    }
+
+    [Persistent("AlertLevel")]
+    public AlertLevel Level
+    {
+        get { return GetPropertyValue<AlertLevel>(); }
+        set { SetPropertyValue(nameof(Level), value); }
     }
 
     [Size(SizeAttribute.Unlimited)]

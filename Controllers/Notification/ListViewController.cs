@@ -26,14 +26,14 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
         {
             base.OnActivated();
 
-            var criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(Application.Security.UserId) && x.IsDeliverd == false);
+            var criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid) && x.IsDelivered == false);
 
             var objectSpace = Application.CreateObjectSpace(typeof(GNRL_Notification));
             var notifications = objectSpace.GetObjects<GNRL_Notification>(criteria);
-            
+
             foreach (var notification in notifications)
             {
-                notification.SetMemberValue(nameof(GNRL_Notification.IsDeliverd), true);
+                notification.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
             }
 
             try
@@ -74,17 +74,14 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
             e.ShowViewParameters.Controllers.Add(Application.CreateController<DialogController>());
             e.ShowViewParameters.CreatedView = Application.CreateDetailView(nestedObjectSpace, nestedObjectSpace.GetObject(ViewCurrentObject));
 
-            if (!ViewCurrentObject.IsSeen)
+            if (!ViewCurrentObject.IsSeen && ViewCurrentObject.ToUser is not null && ViewCurrentObject.ToUser.Oid.Equals(Application.Security.UserId))
             {
                 ViewCurrentObject.SetMemberValue(nameof(GNRL_Notification.IsSeen), true);
-                ViewCurrentObject.SetMemberValue(nameof(GNRL_Notification.IsDeliverd), true);
+                ViewCurrentObject.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
 
                 ObjectSpace.CommitChanges();
 
-                if (ViewCurrentObject.ToUser is not null)
-                {
-                    notificationDelivery.NotifyDismiss(ViewCurrentObject.Oid, ViewCurrentObject.ToUser.Oid);
-                }
+                notificationDelivery.NotifyDismiss(ViewCurrentObject.Oid, ViewCurrentObject.ToUser.Oid);
             }
         }
 

@@ -1,7 +1,4 @@
-﻿using DevExpress.ExpressApp.ConditionalAppearance;
-using DevExpress.ExpressApp.DC;
-using DevExpress.ExpressApp.Model;
-using DevExpress.ExpressApp.Security;
+﻿using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl;
 using DevExpress.Persistent.BaseImpl.PermissionPolicy;
@@ -25,7 +22,7 @@ public class GNRL_Notification : BaseObject
         base.AfterConstruction();
 
         IsSeen = false;
-        IsDeliverd = false;
+        IsDelivered = false;
         Level = AlertLevel.Information;
     }
 
@@ -39,7 +36,7 @@ public class GNRL_Notification : BaseObject
         private set { SetPropertyValue(nameof(Message), value); }
     }
 
-    [VisibleInListView(true)]
+    [VisibleInListView(false)]
     [Persistent("DateCreated")]
     [DbType("datetime2(0)")]
     public DateTime DateCreated
@@ -50,6 +47,7 @@ public class GNRL_Notification : BaseObject
 
     [VisibleInDetailView(false)]
     [VisibleInListView(false)]
+    [VisibleInLookupListView(false)]
     [NoForeignKey]
     [Persistent("FromApplicationUser")]
     public PermissionPolicyUser FromUser
@@ -58,8 +56,9 @@ public class GNRL_Notification : BaseObject
         private set { SetPropertyValue(nameof(FromUser), value); }
     }
 
-    [SecurityBrowsable]
-    [Browsable(false)]
+    [VisibleInDetailView(false)]
+    [VisibleInListView(false)]
+    [VisibleInLookupListView(false)]
     [NoForeignKey]
     [Persistent("ToApplicationUser")]
     public PermissionPolicyUser ToUser
@@ -80,16 +79,16 @@ public class GNRL_Notification : BaseObject
 
     [SecurityBrowsable]
     [Browsable(false)]
-    [Persistent("IsDeliverd")]
+    [Persistent("IsDelivered")]
     [DbType("bit")]
-    public bool IsDeliverd
+    public bool IsDelivered
     {
         get { return GetPropertyValue<bool>(); }
-        private set { SetPropertyValue(nameof(IsDeliverd), value); }
+        private set { SetPropertyValue(nameof(IsDelivered), value); }
     }
 
-    [SecurityBrowsable]
-    [Browsable(false)]
+    [VisibleInListView(false)]
+    [VisibleInLookupListView(false)]
     [Persistent("Level")]
     public AlertLevel Level
     {
@@ -105,5 +104,15 @@ public class GNRL_Notification : BaseObject
     {
         get { return GetPropertyValue<string>(); }
         private set { SetPropertyValue(nameof(ObjectHandle), value); }
+    }
+
+    [SecurityBrowsable]
+    [Browsable(false)]
+    [Persistent("IsEmailed")]
+    [DbType("bit")]
+    public bool? IsEmailed
+    {
+        get { return GetPropertyValue<bool?>(); }
+        private set { SetPropertyValue(nameof(IsEmailed), value); }
     }
 }

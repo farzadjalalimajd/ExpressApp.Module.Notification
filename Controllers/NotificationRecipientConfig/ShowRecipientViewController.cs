@@ -13,13 +13,8 @@ namespace ExpressApp.Module.Notification.Controllers.NotificationRecipientConfig
 
             var showRecipientAction = new PopupWindowShowAction(this, "GNRL_NotificationRecipientConfig.ShowRecipient", PredefinedCategory.RecordEdit)
             {
-                Caption = "Recipients",
-                ImageName = "BO_User",
                 TargetObjectType = typeof(GNRL_NotificationRecipientConfig),
-                TargetObjectsCriteria = "[TargetType] Is Not Null",
-                TargetObjectsCriteriaMode = TargetObjectsCriteriaMode.TrueForAll,
                 TargetViewType = ViewType.DetailView,
-                SelectionDependencyType = SelectionDependencyType.RequireSingleObject,
             };
             showRecipientAction.CustomizePopupWindowParams += ShowRecipientAction_CustomizePopupWindowParams;
         }

@@ -1,8 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Application>
   <ActionDesign>
+    <Actions>
+      <Action Id="GNRL_Notification.OpenSource" Caption="Source" TargetObjectsCriteria="[ObjectHandle] Is Not Null" ImageName="Detailed" />
+      <Action Id="GNRL_Notification.Seen" Caption="Seen" ImageName="Action_Grant_Set" />
+      <Action Id="GNRL_NotificationConfig.EvaluateMessage" Caption="Evaluate" ImageName="ModelEditor_GenerateContent" SelectionDependencyType="RequireSingleObject" TargetObjectsCriteria="[TargetType] Is Not Null And Not IsNullOrEmpty([Message])" TargetObjectsCriteriaMode="TrueForAll" />
+      <Action Id="GNRL_NotificationRecipientConfig.ShowRecipient" Caption="Recipients" ImageName="BO_User" SelectionDependencyType="RequireSingleObject" TargetObjectsCriteria="[TargetType] Is Not Null" />
+      <Action Id="Notifications" ImageName="notification_notifications" Caption="" />
+    </Actions>
     <ActionToContainerMapping>
       <ActionContainer Id="PopupActions">
+        <ActionLink ActionId="GNRL_Notification.OpenSource" IsNewNode="True" />
         <ActionLink ActionId="GNRL_Notification.Seen" IsNewNode="True" />
         <ActionLink ActionId="GNRL_NotificationConfig.EvaluateMessage" IsNewNode="True" />
         <ActionLink ActionId="GNRL_NotificationRecipientConfig.ShowRecipient" IsNewNode="True" />
@@ -10,13 +18,14 @@
     </ActionToContainerMapping>
   </ActionDesign>
   <BOModel>
-    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_Notification" Caption="Notification" ImageName="notifications">
+    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_Notification" Caption="Notification" ImageName="notification_notifications">
       <AppearanceRules>
-        <AppearanceRule Id="@0b76b1be-c606-4878-be0c-ef9482c9f0d1" TargetItems="*" Criteria="[IsSeen] = False" Priority="0" FontStyle="Bold" IsNewNode="True" />
+        <AppearanceRule Id="@0b76b1be-c606-4878-be0c-ef9482c9f0d1" TargetItems="*" Criteria="[IsSeen] = False" Priority="0" FontStyle="Bold" Context="ListView" IsNewNode="True" />
       </AppearanceRules>
       <OwnMembers>
         <Member Name="DateCreated" DisplayFormat="{0:yyyy/M/d}" />
         <Member Name="FromUser" Caption="From" />
+        <Member Name="ToUser" Caption="To" />
       </OwnMembers>
     </Class>
     <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" ImageName="Actions_Settings" Caption="Notification Config" IsCloneable="True">
@@ -24,6 +33,7 @@
         <AppearanceRule Id="@8988284a-ff40-4990-98f4-3817bb087af2" TargetItems="Criteria" Criteria="[TargetType] Is Null" Priority="0" Enabled="False" IsNewNode="True" />
       </AppearanceRules>
       <OwnMembers>
+        <Member Name="Level" Caption="Alert Level" />
         <Member Name="Message" ToolTip="This text will be evaluated by criteria language syntax. You can use 'Target Type' members." />
       </OwnMembers>
     </Class>
@@ -35,26 +45,49 @@
     <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationSchedule" Caption="Notification Schedule" />
   </BOModel>
   <SchemaModules>
-    <SchemaModule Name="CloneObjectModule" Version="23.1.6.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.1.6.0" IsNewNode="True" />
+    <SchemaModule Name="CloneObjectModule" Version="23.2.3.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.2.3.0" IsNewNode="True" />
   </SchemaModules>
   <Validation>
     <Rules>
       <RuleRequiredField Id="@097f07ce-baf4-4c0b-b2c4-7e44ab306648" TargetPropertyName="NotificationConfig" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationRecipientConfig" TargetContextIDs="Save" IsNewNode="True" />
       <RuleRequiredField Id="@2768b20c-e60b-4438-8515-5df1998b23a3" TargetPropertyName="TargetType" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" TargetContextIDs="Save" IsNewNode="True" />
       <RuleRequiredField Id="@44f1a100-713e-4184-bc37-ad02d07e8976" TargetPropertyName="Message" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" TargetContextIDs="Save" IsNewNode="True" />
-      <RuleRequiredField Id="@80c27a30-459f-4b74-900b-a291f7f8f8c7" TargetPropertyName="Criteria" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" TargetContextIDs="Save" TargetCriteria="[TargetType] Is Not Null" IsNewNode="True" />
       <RuleRequiredField Id="@cad3bad7-474f-4562-b966-43bff8c8c755" TargetPropertyName="Recipients" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" TargetContextIDs="Save" IsNewNode="True" />
       <RuleRequiredField Id="@cc754c9c-bc72-4836-a033-6fdad6a2d315" TargetPropertyName="Name" TargetType="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" TargetContextIDs="Save" IsNewNode="True" />
     </Rules>
   </Validation>
   <Views>
-    <ListView Id="GNRL_Notification_PopUp_ListView" ClassName="ExpressApp.Module.Notification.BusinessObjects.GNRL_Notification" IsNewNode="True">
-      <Columns IsNewNode="True">
-        <ColumnInfo Id="DateCreated" PropertyName="DateCreated" Index="-1" SortOrder="Descending" SortIndex="0" IsNewNode="True" />
-        <ColumnInfo Id="Message" PropertyName="Message" Index="0" IsNewNode="True" />
+    <ListView Id="GNRL_Notification_ListView" DataAccessMode="Client" TopReturnedObjects="200">
+      <Columns>
+        <ColumnInfo Id="DateCreated" SortOrder="Descending" SortIndex="0" />
       </Columns>
     </ListView>
+    <DetailView Id="GNRL_NotificationConfig_DetailView">
+      <Layout>
+        <LayoutGroup Id="Main">
+          <LayoutGroup Id="SimpleEditors">
+            <LayoutItem Id="Name" ViewItem="Name" ShowCaption="" Index="0" IsNewNode="True" />
+            <LayoutItem Id="Enabled" ViewItem="Enabled" ShowCaption="" Index="1" IsNewNode="True" />
+            <LayoutItem Id="TargetType" ViewItem="TargetType" ShowCaption="" Index="1" IsNewNode="True" />
+            <LayoutItem Id="Level" ViewItem="Level" ShowCaption="" Index="3" IsNewNode="True" />
+            <LayoutItem Id="HasEmailNotification" ViewItem="HasEmailNotification" ShowCaption="" Index="4" IsNewNode="True" />
+            <LayoutGroup Id="GNRL_NotificationConfig" Caption="Notification Config" Removed="True">
+              <LayoutGroup Id="GNRL_NotificationConfig_col1">
+                <LayoutItem Id="Enabled" Removed="True" />
+                <LayoutItem Id="HasEmailNotification" Removed="True" />
+                <LayoutItem Id="Name" Removed="True" />
+              </LayoutGroup>
+              <LayoutGroup Id="GNRL_NotificationConfig_col2">
+                <LayoutItem Id="Level" Removed="True" />
+                <LayoutItem Id="TargetType" Removed="True" />
+              </LayoutGroup>
+            </LayoutGroup>
+          </LayoutGroup>
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <ListView Id="GNRL_NotificationConfig_ListView" DataAccessMode="Client" />
     <DetailView Id="GNRL_NotificationRecipientConfig_RecipientUsers_DetailView" CaptionColon=":" EnableCaptionColon="True" CaptionLocation="Default" CaptionHorizontalAlignment="Default" CaptionVerticalAlignment="Default" CaptionWordWrap="Default" EnableLayoutGroupImages="True" CustomizationEnabled="True" RequiredFieldMark="*" ClassName="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationRecipientConfig" IsNewNode="True">
       <HiddenActions IsNewNode="True">
         <ActionLink ActionId="GNRL_NotificationRecipientConfig.ShowRecipient" IsNewNode="True" />
@@ -65,6 +98,30 @@
       <Layout IsNewNode="True">
         <LayoutGroup Id="Main" Index="0" ShowCaption="False" RelativeSize="100" Caption="Main" IsNewNode="True">
           <LayoutItem Id="RecipientUsers" ViewItem="RecipientUsers" Index="0" RelativeSize="100" IsNewNode="True" />
+        </LayoutGroup>
+      </Layout>
+    </DetailView>
+    <DetailView Id="GNRL_NotificationSchedule_DetailView">
+      <Layout>
+        <LayoutGroup Id="Main">
+          <LayoutGroup Id="SimpleEditors">
+            <LayoutItem Id="Name" ViewItem="Name" ShowCaption="" Index="0" IsNewNode="True" />
+            <LayoutItem Id="TargetType" ViewItem="TargetType" ShowCaption="" Index="1" IsNewNode="True" />
+            <LayoutItem Id="HasEmailNotification" ViewItem="HasEmailNotification" ShowCaption="" Index="2" IsNewNode="True" />
+            <LayoutItem Id="Level" ViewItem="Level" ShowCaption="" Index="3" IsNewNode="True" />
+            <LayoutItem Id="Enabled" ViewItem="Enabled" ShowCaption="" Index="4" IsNewNode="True" />
+            <LayoutGroup Id="GNRL_NotificationConfig" Removed="True">
+              <LayoutGroup Id="GNRL_NotificationConfig_col1">
+                <LayoutItem Id="Enabled" Removed="True" />
+                <LayoutItem Id="HasEmailNotification" Removed="True" />
+                <LayoutItem Id="Name" Removed="True" />
+              </LayoutGroup>
+              <LayoutGroup Id="GNRL_NotificationConfig_col2">
+                <LayoutItem Id="Level" Removed="True" />
+                <LayoutItem Id="TargetType" Removed="True" />
+              </LayoutGroup>
+            </LayoutGroup>
+          </LayoutGroup>
         </LayoutGroup>
       </Layout>
     </DetailView>

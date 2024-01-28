@@ -1,5 +1,6 @@
 ﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
+using DevExpress.ExpressApp.Utils;
 using DevExpress.Persistent.Base;
 using ExpressApp.Library.Controllers;
 using ExpressApp.Module.Notification.BusinessObjects;
@@ -8,40 +9,31 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
 {
     public partial class OpenSourceViewController : ObjectViewController<DetailView, GNRL_Notification>
     {
-        public const string OpenSourceActionId = $"{nameof(GNRL_Notification)}.OpenSource";
-        public SimpleAction OpenSourceAction { get; private set; }
-
         public OpenSourceViewController()
         {
             InitializeComponent();
 
-            OpenSourceAction = new SimpleAction(this, OpenSourceActionId, PredefinedCategory.PopupActions)
+            var openSourceAction = new SimpleAction(this, "GNRL_Notification.OpenSource", PredefinedCategory.RecordEdit)
             {
-                Caption = "Source",
-                ImageName = "Detailed",
-                TargetObjectsCriteria = $"[{nameof(GNRL_Notification.ObjectHandle)}] Is Not Null",
-                TargetObjectsCriteriaMode = TargetObjectsCriteriaMode.TrueForAll,
+                TargetObjectType = typeof(GNRL_Notification),
+                TargetViewType = ViewType.DetailView,
             };
-            OpenSourceAction.Execute += OpenNotificationSourceAction_Execute;
+            openSourceAction.Execute += OpenNotificationSourceAction_Execute;
         }
 
         private void OpenNotificationSourceAction_Execute(object sender, SimpleActionExecuteEventArgs e)
         {
-            var obj = ObjectSpace.GetObjectByHandle(ViewCurrentObject.ObjectHandle);
-            if (obj is not null)
+            var obj = ObjectSpace.GetObjectByHandle(ViewCurrentObject.ObjectHandle) ?? throw new UserFriendlyException(CaptionHelper.GetLocalizedText("Exceptions/UserVisibleExceptions", "RequestedObjectIsNotFound"));
+            var os = Application.CreateObjectSpace(obj.GetType());
+            var view = Application.CreateDetailView(os, os.GetObject(obj));
+
+            Frame.GetController<PopUpViewController>()?.CloseAll(View);
+
+            Application.MainWindow.SetView(view);
+
+            if (new[] { TemplateContext.PopupWindow, TemplateContext.LookupWindow, TemplateContext.LookupWindow }.Contains(Frame.Context))
             {
-                var os = Application.CreateObjectSpace(obj.GetType());
-                var view = Application.CreateDetailView(os, os.GetObject(obj));
-
-                Frame.GetController<PopUpViewController>()?.CloseAll(View);
-
-                Application.MainWindow.SetView(view);
-
                 View.Close();
-            }
-            else
-            {
-                throw new UserFriendlyException("You do not have the necessary permissions to see this item.");
             }
         }
     }

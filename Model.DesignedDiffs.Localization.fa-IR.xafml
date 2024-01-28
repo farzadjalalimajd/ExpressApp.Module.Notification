@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application>
+  <ActionDesign>
+    <Actions>
+      <Action Id="GNRL_Notification.OpenSource" Caption="مرجع" />
+      <Action Id="GNRL_Notification.Seen" Caption="دیده شد" />
+    </Actions>
+  </ActionDesign>
+  <BOModel>
+    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_Notification" Caption="اعلان">
+      <OwnMembers>
+        <Member Name="DateCreated" Caption="تاریخ ایجاد" />
+        <Member Name="FromUser" Caption="از کاربر" />
+        <Member Name="Level" Caption="سطح" />
+        <Member Name="Message" Caption="پیام" />
+        <Member Name="ToUser" Caption="به کاربر" />
+      </OwnMembers>
+    </Class>
+    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationConfig" Caption="تنظیم اعلان" />
+    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationRecipientConfig" Caption="تنظیم دریافت کنند‌گان اعلان" />
+    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationSchedule" Caption="زمانبندی اعلان" />
+  </BOModel>
+  <Localization>
+    <LocalizationGroup Name="Enums">
+      <LocalizationGroup Name="ExpressApp.Module.Notification.Base.AlertLevel">
+        <LocalizationItem Name="Critical" Value="بحرانی" />
+        <LocalizationItem Name="Information" Value="جهت اطلاع" />
+        <LocalizationItem Name="Success" Value="عملیات موفق" />
+        <LocalizationItem Name="Warning" Value="هشدار" />
+      </LocalizationGroup>
+    </LocalizationGroup>
+  </Localization>
+  <NavigationItems>
+    <Items>
+      <Item Id="Settings" Caption="تنظیمات" />
+    </Items>
+  </NavigationItems>
+</Application>

@@ -1,24 +1,11 @@
 ﻿using DevExpress.Data.Filtering;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Blazor.Services;
 using DevExpress.ExpressApp.Blazor;
-using DevExpress.ExpressApp.Editors;
-using DevExpress.ExpressApp.Layout;
-using DevExpress.ExpressApp.Model.NodeGenerators;
 using DevExpress.ExpressApp.SystemModule;
-using DevExpress.ExpressApp.Templates;
-using DevExpress.ExpressApp.Utils;
-using DevExpress.Persistent.Base;
-using DevExpress.Persistent.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ExpressApp.Module.Notification.BusinessObjects;
 using Microsoft.Extensions.DependencyInjection;
 using ExpressApp.Module.Notification.Base;
-using DevExpress.Persistent.BaseImpl.PermissionPolicy;
 
 namespace ExpressApp.Module.Notification.Controllers
 {
@@ -49,10 +36,10 @@ namespace ExpressApp.Module.Notification.Controllers
             {
                 Thread.Sleep(TimeSpan.FromMinutes(1));
 
-                var c1 = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(Application.Security.UserId) && x.IsDeliverd == false);
+                var c1 = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid) && x.IsDelivered == false);
 
                 var objectSpace = Application?.CreateObjectSpace(typeof(GNRL_Notification));
-                var notifications = objectSpace?.GetObjects<GNRL_Notification>(c1);
+                var notifications = objectSpace?.GetObjects<GNRL_Notification>(c1).OrderByDescending(x => x.DateCreated);
 
                 if (notifications is not null)
                 {
@@ -60,7 +47,7 @@ namespace ExpressApp.Module.Notification.Controllers
                     {
                         try
                         {
-                            notification.SetMemberValue(nameof(GNRL_Notification.IsDeliverd), true);
+                            notification.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
                             objectSpace.CommitChanges();
                         }
                         catch (Exception)
@@ -89,7 +76,7 @@ namespace ExpressApp.Module.Notification.Controllers
                 var notification = objectSpace.GetObjectByKey<GNRL_Notification>(e.Oid);
                 try
                 {
-                    notification.SetMemberValue(nameof(GNRL_Notification.IsDeliverd), true);
+                    notification.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
                     objectSpace.CommitChanges();
                 }
                 catch (Exception)
@@ -109,7 +96,7 @@ namespace ExpressApp.Module.Notification.Controllers
 
                 switch (notification.Level)
                 {
-                    case AlertLevel.Error:
+                    case AlertLevel.Critical:
                         alertsHandlerService.ShowAlert(notification.Message, DevExpress.ExpressApp.Blazor.Components.AlertLevel.Error, false);
                         break;
                     case AlertLevel.Warning:

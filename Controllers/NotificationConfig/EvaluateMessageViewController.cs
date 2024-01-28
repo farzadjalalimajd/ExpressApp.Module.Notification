@@ -14,13 +14,8 @@ namespace ExpressApp.Module.Notification.Controllers.NotificationConfig
 
             var evaluateMessageAction = new SimpleAction(this, "GNRL_NotificationConfig.EvaluateMessage", PredefinedCategory.RecordEdit)
             {
-                Caption = "Evaluate",
-                ImageName = "ModelEditor_GenerateContent",
-                SelectionDependencyType = SelectionDependencyType.RequireSingleObject,
                 TargetObjectType = typeof(GNRL_NotificationConfig),
                 TargetViewType = ViewType.DetailView,
-                TargetObjectsCriteria = "[TargetType] Is Not Null And Not IsNullOrEmpty([Message])",
-                TargetObjectsCriteriaMode = TargetObjectsCriteriaMode.TrueForAll,
             };
             evaluateMessageAction.Execute += EvaluateMessageAction_Execute;
         }
@@ -38,7 +33,25 @@ namespace ExpressApp.Module.Notification.Controllers.NotificationConfig
                     message = "N/A";
                 }
 
-                Application.ShowViewStrategy.ShowMessage(message, InformationType.Info, displayInterval: 10000);
+                var informationTypeType = InformationType.Info;
+
+                switch (ViewCurrentObject.Level)
+                {
+                    case Base.AlertLevel.Critical:
+                        informationTypeType = InformationType.Error;
+                        break;
+                    case Base.AlertLevel.Warning:
+                        informationTypeType = InformationType.Warning;
+                        break;
+                    case Base.AlertLevel.Information:
+                        informationTypeType = InformationType.Info;
+                        break;
+                    case Base.AlertLevel.Success:
+                        informationTypeType = InformationType.Success;
+                        break;
+                }
+
+                Application.ShowViewStrategy.ShowMessage(message, informationTypeType, displayInterval: 10000);
             }
             catch (Exception ex)
             {

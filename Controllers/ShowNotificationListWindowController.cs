@@ -17,7 +17,6 @@ namespace ExpressApp.Module.Notification.Controllers
 #pragma warning disable IDE0052 // Remove unread private members
         private Timer timer;
 #pragma warning restore IDE0052 // Remove unread private members
-        public const string NotificationsActionId = "Notifications";
         private readonly INotificationDelivery notificationDeliveryManager;
 
         public PopupWindowShowAction NotificationsAction { get; private set; }
@@ -43,21 +42,13 @@ namespace ExpressApp.Module.Notification.Controllers
 
             TargetWindowType = WindowType.Main;
 
-            NotificationsAction = new PopupWindowShowAction(this, NotificationsActionId, PredefinedCategory.Notifications)
-            {
-                Caption = string.Empty,
-                //ImageName = "BO_Notifications",
-                ImageName = "notifications",
-            };
+            NotificationsAction = new PopupWindowShowAction(this, "Notifications", PredefinedCategory.Notifications);
             NotificationsAction.CustomizePopupWindowParams += NotificationsAction_CustomizePopupWindowParams;
         }
 
         private void NotificationsAction_CustomizePopupWindowParams(object sender, CustomizePopupWindowParamsEventArgs e)
         {
-            var listViewId = "GNRL_Notification_PopUp_ListView";
-            var objectSpace = Application.CreateObjectSpace(typeof(GNRL_Notification));
-            var collectionSource = Application.CreateCollectionSource(objectSpace, typeof(GNRL_Notification), listViewId);
-            e.View = Application.CreateListView(listViewId, collectionSource, true);
+            e.View = Application.CreateListView(typeof(GNRL_Notification), true);
             e.DialogController.CloseOnCurrentObjectProcessing = false;
         }
 
@@ -74,13 +65,13 @@ namespace ExpressApp.Module.Notification.Controllers
             notificationDeliveryManager.Added += NotificationDeliveryManager_NewNotification;
             notificationDeliveryManager.Dismissed += NotificationDeliveryManager_Dismissed;
 
-            timer = new Timer(Callback, null, TimeSpan.Zero, TimeSpan.FromHours(1));
+            timer ??= new Timer(Callback, null, TimeSpan.Zero, TimeSpan.FromHours(1));
         }
 
         private void Callback(object state)
         {
             var objectSpace = Application.CreateObjectSpace(typeof(GNRL_Notification));
-            var criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(Application.Security.UserId) && x.IsDeliverd == false);
+            var criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid) && !x.IsSeen);
             NotificationCount = objectSpace.GetObjects<GNRL_Notification>(criteria).Count;
         }
 
@@ -96,6 +87,8 @@ namespace ExpressApp.Module.Notification.Controllers
         {
             notificationDeliveryManager.Added -= NotificationDeliveryManager_NewNotification;
             notificationDeliveryManager.Dismissed -= NotificationDeliveryManager_Dismissed;
+
+            timer.Dispose();
 
             base.OnDeactivated();
         }

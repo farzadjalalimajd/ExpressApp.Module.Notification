@@ -4,8 +4,7 @@ using DevExpress.Xpo;
 namespace ExpressApp.Module.Notification.BusinessObjects;
 
 [DefaultClassOptions]
-//[NavigationItem("Settings")]
-[NavigationItem(false)]
+[NavigationItem("Settings")]
 [MapInheritance(MapInheritanceType.ParentTable)]
 public class GNRL_NotificationSchedule : GNRL_NotificationConfig
 {

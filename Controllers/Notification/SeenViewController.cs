@@ -18,9 +18,6 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
 
             var seenAction = new SimpleAction(this, "GNRL_Notification.Seen", PredefinedCategory.RecordEdit)
             {
-                Caption = "Seen",
-                ImageName = "Action_Grant_Set",
-                SelectionDependencyType = SelectionDependencyType.Independent,
                 TargetObjectType = typeof(GNRL_Notification),
             };
             seenAction.Execute += SeenAction_Execute;
@@ -45,7 +42,7 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
                 foreach (var item in objs)
                 {
                     item.SetMemberValue(nameof(GNRL_Notification.IsSeen), true);
-                    item.SetMemberValue(nameof(GNRL_Notification.IsDeliverd), true);
+                    item.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
                 }
             }
 

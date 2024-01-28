@@ -1,7 +1,9 @@
 ﻿using DevExpress.ExpressApp.Core;
+using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.PermissionPolicy;
 using ExpressApp.Module.Notification.Base;
 using ExpressApp.Module.Notification.BusinessObjects;
+using System.Reactive;
 using System.ServiceModel.Channels;
 
 namespace ExpressApp.Module.Notification.BaseImpl;
@@ -17,7 +19,7 @@ public class NotificationManagerService : INotificationService
         this.notificationDeliveryManager = notificationDeliveryManager;
     }
 
-    public void Send(string message, object fromUserId, object toUserId, string objectHandle, AlertLevel level = AlertLevel.Information)
+    public void Send(string message, object fromUserId, object toUserId, string objectHandle, AlertLevel level = AlertLevel.Information, bool hasEmailNotification = false)
     {
         if (string.IsNullOrWhiteSpace(message))
         {
@@ -36,6 +38,7 @@ public class NotificationManagerService : INotificationService
         notification.SetMemberValue(nameof(GNRL_Notification.ToUser), objectSpace.GetObjectByKey<PermissionPolicyUser>(toUserId));
         notification.SetMemberValue(nameof(GNRL_Notification.DateCreated), DateTime.Now);
         notification.SetMemberValue(nameof(GNRL_Notification.Level), level);
+        notification.SetMemberValue(nameof(GNRL_Notification.IsEmailed), hasEmailNotification ? false : null);
 
         if (fromUserId is not null)
         {
@@ -44,7 +47,8 @@ public class NotificationManagerService : INotificationService
 
         objectSpace.CommitChanges();
 
-        Task.Run(() => {
+        Task.Run(() =>
+        {
             notificationDeliveryManager.NotifyNew(notification.Oid, notification.Message, notification.FromUser?.Oid, notification.ToUser.Oid, notification.ObjectHandle);
         });
     }
@@ -53,6 +57,8 @@ public class NotificationManagerService : INotificationService
     {
         var objectSpace = nonSecuredObjectSpaceFactory.CreateNonSecuredObjectSpace<GNRL_Notification>();
         var newItems = new List<GNRL_Notification>();
+
+        Tracing.Tracer.LogText($"ExpressApp.Module.Notification.BaseImpl.NotificationManagerService.Send: notifications count: {notifications.Count()}.");
 
         foreach (var item in notifications)
         {
@@ -72,6 +78,7 @@ public class NotificationManagerService : INotificationService
             notification.SetMemberValue(nameof(GNRL_Notification.ToUser), objectSpace.GetObjectByKey<PermissionPolicyUser>(item.ToUserId));
             notification.SetMemberValue(nameof(GNRL_Notification.DateCreated), DateTime.Now);
             notification.SetMemberValue(nameof(GNRL_Notification.Level), item.Level);
+            notification.SetMemberValue(nameof(GNRL_Notification.IsEmailed), item.HasEmailNotification ? false : null);
 
             if (item.FromUserId is not null)
             {
@@ -79,11 +86,14 @@ public class NotificationManagerService : INotificationService
             }
 
             newItems.Add(notification);
+
+            Tracing.Tracer.LogText($"ExpressApp.Module.Notification.BaseImpl.NotificationManagerService.Send: newItems Added: {notification.ObjectHandle}.");
         }
 
         objectSpace.CommitChanges();
 
-        Task.Run(() => {
+        Task.Run(() =>
+        {
             foreach (var item in newItems)
             {
                 notificationDeliveryManager.NotifyNew(item.Oid, item.Message, item.FromUser?.Oid, item.ToUser.Oid, item.ObjectHandle);
