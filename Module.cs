@@ -1,5 +1,8 @@
-﻿using DevExpress.ExpressApp;
+﻿using DevExpress.Data.Filtering;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.DC;
+using DevExpress.ExpressApp.Notifications;
+using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.Xpo;
 using ExpressApp.Library.Controllers;
@@ -35,7 +38,27 @@ public sealed class NotificationModule : ModuleBase
 
         var auditService = DevExpress.Persistent.AuditTrail.AuditTrailService.GetService(Application.ServiceProvider);
         auditService.CustomizeAuditTrailSettings += AuditService_CustomizeAuditTrailSettings;
+
+        application.LoggedOn += Application_LoggedOn;
     }
+
+    private void Application_LoggedOn(object sender, LogonEventArgs e)
+    {
+        if (Application.Modules.FindModule<NotificationsModule>() is NotificationsModule notificationsModule)
+        {
+            var notificationsProvider = notificationsModule.DefaultNotificationsProvider;
+            notificationsProvider.CustomizeNotificationCollectionCriteria += NotificationsProvider_CustomizeNotificationCollectionCriteria;
+        }
+    }
+
+    private void NotificationsProvider_CustomizeNotificationCollectionCriteria(object sender, DevExpress.Persistent.Base.General.CustomizeCollectionCriteriaEventArgs e)
+    {
+        if (e.Type == typeof(GNRL_Notification))
+        {
+            e.Criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid));
+        }
+    }
+
     public override void CustomizeTypesInfo(ITypesInfo typesInfo)
     {
         base.CustomizeTypesInfo(typesInfo);

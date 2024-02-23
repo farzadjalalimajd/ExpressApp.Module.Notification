@@ -1,5 +1,4 @@
-﻿using DevExpress.Data.Filtering;
-using DevExpress.ExpressApp;
+﻿using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
 using DevExpress.Persistent.Base;
 using ExpressApp.Module.Notification.Base;
@@ -19,6 +18,7 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
             var seenAction = new SimpleAction(this, "GNRL_Notification.Seen", PredefinedCategory.RecordEdit)
             {
                 TargetObjectType = typeof(GNRL_Notification),
+                TargetViewType = ViewType.ListView
             };
             seenAction.Execute += SeenAction_Execute;
         }
@@ -31,33 +31,23 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
 
         private void SeenAction_Execute(object sender, SimpleActionExecuteEventArgs e)
         {
-            var c1 = CriteriaOperator.Parse("IsCurrentUserId([ToUser.Oid])");
-            var c2 = CriteriaOperator.Parse("[IsSeen] = False");
-            var c3 = new GroupOperator(c1, c2);
+            var viewSelectedObjects = ViewSelectedObjects.ToList();
 
-            var objs = ObjectSpace.GetObjects<GNRL_Notification>(c3);
-
-            if (objs is not null)
+            foreach (var item in ViewSelectedObjects)
             {
-                foreach (var item in objs)
-                {
-                    item.SetMemberValue(nameof(GNRL_Notification.IsSeen), true);
-                    item.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
-                }
+                item.SetMemberValue(nameof(GNRL_Notification.AlarmTime), null);
+                item.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
             }
 
             try
             {
                 ObjectSpace.CommitChanges();
 
-                if (objs is not null)
+                foreach (var item in viewSelectedObjects)
                 {
-                    foreach (var item in objs)
+                    if (item.ToUser is not null)
                     {
-                        if (item.ToUser is not null)
-                        {
-                            notificationDelivery.NotifyDismiss(item.Oid, item.ToUser.Oid);
-                        }
+                        notificationDelivery.NotifyDismiss(item.Oid, item.ToUser.Oid);
                     }
                 }
             }

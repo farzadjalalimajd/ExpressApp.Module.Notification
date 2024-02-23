@@ -56,7 +56,7 @@ public class EmailNotificationService : IEmailNotificationService
             var nonSecuredObjectSpace = nonSecuredObjectSpaceFactory.CreateNonSecuredObjectSpace<GNRL_Notification>();
             var c1 = new BinaryOperator(nameof(GNRL_Notification.IsEmailed), false);
             var c2 = new BinaryOperator(nameof(GNRL_Notification.IsDelivered), false);
-            var c3 = new BinaryOperator(nameof(GNRL_Notification.IsSeen), false);
+            var c3 = new BinaryOperator(nameof(GNRL_Notification.AlarmTime), DateTime.Now, BinaryOperatorType.LessOrEqual);
             var c4 = new GroupOperator(GroupOperatorType.And, c1, c2, c3);
             var pendingNotifications = nonSecuredObjectSpace.GetObjects<GNRL_Notification>(c4);
 
@@ -98,7 +98,7 @@ public class EmailNotificationService : IEmailNotificationService
                 var nonSecuredObjectSpace = nonSecuredObjectSpaceFactory.CreateNonSecuredObjectSpace<GNRL_Notification>();
                 var notification = nonSecuredObjectSpace.GetObjectByKey<GNRL_Notification>(notificationKey);
 
-                if ((notification.IsEmailed ?? true) || notification.IsDelivered || notification.IsSeen)
+                if ((notification.IsEmailed ?? true) || notification.IsDelivered || !notification.AlarmTime.HasValue)
                 {
                     continue;
                 }
@@ -110,7 +110,7 @@ public class EmailNotificationService : IEmailNotificationService
                 Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
                 //var sourceClassFullName = (nonSecuredObjectSpace.GetObjectByHandle(notification.ObjectHandle) as PersistentBase).ClassInfo.FullName;
                 //var subject = captionHelperProvider.GetCaptionHelper().GetClassCaption(sourceClassFullName);
-                var subject = $"ExpressApp - {notification.Level}";
+                var subject = "ExpressApp";
                 var body = notification.Message;
 
                 var smtp = new SmtpClient

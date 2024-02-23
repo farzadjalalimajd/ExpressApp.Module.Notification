@@ -33,25 +33,7 @@ namespace ExpressApp.Module.Notification.Controllers.NotificationConfig
                     message = "N/A";
                 }
 
-                var informationTypeType = InformationType.Info;
-
-                switch (ViewCurrentObject.Level)
-                {
-                    case Base.AlertLevel.Critical:
-                        informationTypeType = InformationType.Error;
-                        break;
-                    case Base.AlertLevel.Warning:
-                        informationTypeType = InformationType.Warning;
-                        break;
-                    case Base.AlertLevel.Information:
-                        informationTypeType = InformationType.Info;
-                        break;
-                    case Base.AlertLevel.Success:
-                        informationTypeType = InformationType.Success;
-                        break;
-                }
-
-                Application.ShowViewStrategy.ShowMessage(message, informationTypeType, displayInterval: 10000);
+                Application.ShowViewStrategy.ShowMessage(message, InformationType.Info, displayInterval: 10000);
             }
             catch (Exception ex)
             {

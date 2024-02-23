@@ -9,28 +9,18 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
 {
     public partial class ListViewController : ObjectViewController<ListView, GNRL_Notification>
     {
-        private readonly INotificationDelivery notificationDelivery;
-
         public ListViewController()
         {
             InitializeComponent();
-        }
-
-        [ActivatorUtilitiesConstructor]
-        public ListViewController(INotificationDelivery notificationDelivery) : this()
-        {
-            this.notificationDelivery = notificationDelivery;
         }
 
         protected override void OnActivated()
         {
             base.OnActivated();
 
-            var criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid) && x.IsDelivered == false);
-
+            var criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid) && !x.IsDelivered);
             var objectSpace = Application.CreateObjectSpace(typeof(GNRL_Notification));
             var notifications = objectSpace.GetObjects<GNRL_Notification>(criteria);
-
             foreach (var notification in notifications)
             {
                 notification.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
@@ -48,21 +38,9 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
 
             View.AllowNew.SetItemValue(string.Empty, false);
             View.AllowEdit.SetItemValue(string.Empty, false);
-
-            ObjectSpace.ObjectDeleted += ObjectSpace_ObjectDeleted;
+            View.AllowDelete.SetItemValue(string.Empty, false);
 
             Frame.GetController<ListViewProcessCurrentObjectController>().CustomizeShowViewParameters += NotificationViewController_CustomizeShowViewParameters;
-        }
-
-        private void ObjectSpace_ObjectDeleted(object sender, ObjectsManipulatingEventArgs e)
-        {
-            foreach (GNRL_Notification item in e.Objects)
-            {
-                if (!item.IsSeen)
-                {
-                    notificationDelivery.NotifyDismiss(item.Oid, item.ToUser.Oid);
-                }
-            }
         }
 
         void NotificationViewController_CustomizeShowViewParameters(object sender, CustomizeShowViewParametersEventArgs e)
@@ -73,22 +51,10 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
             e.ShowViewParameters.Context = TemplateContext.PopupWindow;
             e.ShowViewParameters.Controllers.Add(Application.CreateController<DialogController>());
             e.ShowViewParameters.CreatedView = Application.CreateDetailView(nestedObjectSpace, nestedObjectSpace.GetObject(ViewCurrentObject));
-
-            if (!ViewCurrentObject.IsSeen && ViewCurrentObject.ToUser is not null && ViewCurrentObject.ToUser.Oid.Equals(Application.Security.UserId))
-            {
-                ViewCurrentObject.SetMemberValue(nameof(GNRL_Notification.IsSeen), true);
-                ViewCurrentObject.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
-
-                ObjectSpace.CommitChanges();
-
-                notificationDelivery.NotifyDismiss(ViewCurrentObject.Oid, ViewCurrentObject.ToUser.Oid);
-            }
         }
 
         protected override void OnDeactivated()
         {
-            ObjectSpace.ObjectDeleted -= ObjectSpace_ObjectDeleted;
-
             Frame.GetController<ListViewProcessCurrentObjectController>().CustomizeShowViewParameters -= NotificationViewController_CustomizeShowViewParameters;
 
             base.OnDeactivated();

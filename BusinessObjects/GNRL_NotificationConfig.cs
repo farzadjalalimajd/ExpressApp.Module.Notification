@@ -33,7 +33,6 @@ public abstract class GNRL_NotificationConfig : BaseObject
         base.AfterConstruction();
 
         Enabled = true;
-        Level = AlertLevel.Information;
     }
 
     [Size(SizeAttribute.DefaultStringMappingFieldSize)]
@@ -59,13 +58,6 @@ public abstract class GNRL_NotificationConfig : BaseObject
     {
         get { return GetPropertyValue<bool>(); }
         set { SetPropertyValue(nameof(HasEmailNotification), value); }
-    }
-
-    [Persistent("AlertLevel")]
-    public AlertLevel Level
-    {
-        get { return GetPropertyValue<AlertLevel>(); }
-        set { SetPropertyValue(nameof(Level), value); }
     }
 
     [Size(SizeAttribute.Unlimited)]

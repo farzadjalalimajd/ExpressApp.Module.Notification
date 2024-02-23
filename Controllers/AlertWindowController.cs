@@ -19,6 +19,7 @@ namespace ExpressApp.Module.Notification.Controllers
 
             TargetWindowType = WindowType.Main;
         }
+
         [ActivatorUtilitiesConstructor]
         public AlertWindowController(INotificationDelivery notificationDeliveryManager) : this()
         {
@@ -36,10 +37,10 @@ namespace ExpressApp.Module.Notification.Controllers
             {
                 Thread.Sleep(TimeSpan.FromMinutes(1));
 
-                var c1 = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid) && x.IsDelivered == false);
+                var c1 = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid) && !x.IsDelivered);
 
                 var objectSpace = Application?.CreateObjectSpace(typeof(GNRL_Notification));
-                var notifications = objectSpace?.GetObjects<GNRL_Notification>(c1).OrderByDescending(x => x.DateCreated);
+                var notifications = objectSpace?.GetObjects<GNRL_Notification>(c1).OrderByDescending(x => x.AlarmTime);
 
                 if (notifications is not null)
                 {
@@ -93,25 +94,7 @@ namespace ExpressApp.Module.Notification.Controllers
             if (Application is BlazorApplication blazorApplication)
             {
                 var alertsHandlerService = blazorApplication.ServiceProvider.GetService<IAlertsHandlerService>();
-
-                switch (notification.Level)
-                {
-                    case AlertLevel.Critical:
-                        alertsHandlerService.ShowAlert(notification.Message, DevExpress.ExpressApp.Blazor.Components.AlertLevel.Error, false);
-                        break;
-                    case AlertLevel.Warning:
-                        alertsHandlerService.ShowAlert(notification.Message, DevExpress.ExpressApp.Blazor.Components.AlertLevel.Warning, false);
-                        break;
-                    case AlertLevel.Information:
-                        alertsHandlerService.ShowAlert(notification.Message, DevExpress.ExpressApp.Blazor.Components.AlertLevel.Information, false);
-                        break;
-                    case AlertLevel.Success:
-                        alertsHandlerService.ShowAlert(notification.Message, DevExpress.ExpressApp.Blazor.Components.AlertLevel.Success, false);
-                        break;
-                    default:
-                        alertsHandlerService.ShowAlert(notification.Message, DevExpress.ExpressApp.Blazor.Components.AlertLevel.Information, false);
-                        break;
-                }
+                alertsHandlerService.ShowAlert(notification.Message, DevExpress.ExpressApp.Blazor.Components.AlertLevel.Information, false);
             }
         }
     }

@@ -31,7 +31,6 @@ namespace ExpressApp.Module.Notification.Controllers
                 if (NotificationsAction is not null)
                 {
                     NotificationsAction.Caption = notificationCoutner == 0 ? string.Empty : notificationCoutner.ToString();
-                    //NotificationsAction.ImageName = notificationCoutner == 0 ? "notifications" : "notifications_active";
                 }
             }
         }
@@ -65,13 +64,13 @@ namespace ExpressApp.Module.Notification.Controllers
             notificationDeliveryManager.Added += NotificationDeliveryManager_NewNotification;
             notificationDeliveryManager.Dismissed += NotificationDeliveryManager_Dismissed;
 
-            timer ??= new Timer(Callback, null, TimeSpan.Zero, TimeSpan.FromHours(1));
+            timer ??= new Timer(Callback, null, TimeSpan.Zero, TimeSpan.FromMinutes(10));
         }
 
         private void Callback(object state)
         {
             var objectSpace = Application.CreateObjectSpace(typeof(GNRL_Notification));
-            var criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid) && !x.IsSeen);
+            var criteria = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid) && x.AlarmTime != null && x.AlarmTime <= DateTime.Now);
             NotificationCount = objectSpace.GetObjects<GNRL_Notification>(criteria).Count;
         }
 

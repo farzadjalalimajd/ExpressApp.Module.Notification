@@ -117,7 +117,7 @@ public class NotificationScheduleAgent : INotificationScheduleAgent
                         foreach (var permissionPolicyUser in permissionPolicyUsers)
                         {
                             var toUserId = permissionPolicyUser.Oid;
-                            var notification = new Base.Notification(message, null, toUserId, objHandle, notificationSchedule.Level, notificationSchedule.HasEmailNotification);
+                            var notification = new Base.Notification(message, toUserId, objHandle, notificationSchedule.HasEmailNotification);
                             notifications.Add(notification);
                         }
                     }

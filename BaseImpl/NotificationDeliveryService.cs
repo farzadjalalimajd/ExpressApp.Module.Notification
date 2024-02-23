@@ -7,9 +7,9 @@ public class NotificationDeliveryService : INotificationDelivery
     public event EventHandler<NotificationAddedEventArgs> Added;
     public event EventHandler<NotificationDismissedEventArgs> Dismissed;
 
-    public void NotifyNew(Guid oid, string message, object fromUserId, object toUserId, string objectHandle, AlertLevel level = AlertLevel.Information)
+    public void NotifyNew(Guid oid, string message, object toUserId, string objectHandle, AlertLevel level = AlertLevel.Information)
     {
-        var eventArgs = new NotificationAddedEventArgs(oid, message, fromUserId, toUserId, level)
+        var eventArgs = new NotificationAddedEventArgs(oid, message, toUserId, level)
         {
             ObjectHandle = objectHandle
         };
