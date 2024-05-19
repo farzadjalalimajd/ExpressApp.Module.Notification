@@ -39,25 +39,31 @@ namespace ExpressApp.Module.Notification.Controllers
 
                 var c1 = CriteriaOperator.FromLambda<GNRL_Notification>(x => IsCurrentUserIdOperator.IsCurrentUserId(x.ToUser.Oid) && !x.IsDelivered);
 
-                var objectSpace = Application?.CreateObjectSpace(typeof(GNRL_Notification));
-                var notifications = objectSpace?.GetObjects<GNRL_Notification>(c1).OrderByDescending(x => x.AlarmTime);
-
-                if (notifications is not null)
+                try
                 {
-                    foreach (var notification in notifications)
-                    {
-                        try
-                        {
-                            notification.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
-                            objectSpace.CommitChanges();
-                        }
-                        catch (Exception)
-                        {
-                            objectSpace.Rollback();
-                        }
+                    var objectSpace = Application?.CreateObjectSpace(typeof(GNRL_Notification));
+                    var notifications = objectSpace?.GetObjects<GNRL_Notification>(c1).OrderByDescending(x => x.AlarmTime);
 
-                        ShowAltert(notification);
+                    if (notifications is not null)
+                    {
+                        foreach (var notification in notifications)
+                        {
+                            try
+                            {
+                                notification.SetMemberValue(nameof(GNRL_Notification.IsDelivered), true);
+                                objectSpace.CommitChanges();
+                            }
+                            catch (Exception)
+                            {
+                                objectSpace.Rollback();
+                            }
+
+                            ShowAltert(notification);
+                        }
                     }
+                }
+                catch (Exception)
+                {
                 }
             });
         }
