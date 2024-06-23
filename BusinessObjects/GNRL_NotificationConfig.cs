@@ -117,7 +117,7 @@ public abstract class GNRL_NotificationConfig : BaseObject
     //}
 
     [CriteriaOptions(nameof(TargetType))]
-    [EditorAlias("PopupCriteriaPropertyEditor")]
+    [EditorAlias(EditorAliases.PopupCriteriaPropertyEditor)]
     [Size(SizeAttribute.Unlimited)]
     [Persistent("Criteria")]
     [DbType("varchar(max)")]

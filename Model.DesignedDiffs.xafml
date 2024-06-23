@@ -2,11 +2,11 @@
 <Application>
   <ActionDesign>
     <Actions>
-      <Action Id="GNRL_Notification.OpenSource" Caption="Source" TargetObjectsCriteria="[ObjectHandle] Is Not Null" ImageName="Detailed" />
-      <Action Id="GNRL_Notification.Seen" Caption="Dismiss" ImageName="Action_Grant_Set" SelectionDependencyType="RequireMultipleObjects" TargetObjectsCriteria="[AlarmTime] Is Not Null" TargetObjectsCriteriaMode="TrueForAll" />
+      <Action Id="GNRL_Notification.OpenSource" Caption="Source" TargetObjectsCriteria="[ObjectHandle] Is Not Null" ImageName="Action_Open_Object" />
+      <Action Id="GNRL_Notification.Seen" Caption="Dismiss All" ImageName="Action_DismissAll" SelectionDependencyType="RequireMultipleObjects" TargetObjectsCriteria="[AlarmTime] Is Not Null" TargetObjectsCriteriaMode="TrueForAll" PaintStyle="Image" />
       <Action Id="GNRL_NotificationConfig.EvaluateMessage" Caption="Evaluate" ImageName="ModelEditor_GenerateContent" SelectionDependencyType="RequireSingleObject" TargetObjectsCriteria="[TargetType] Is Not Null And Not IsNullOrEmpty([Message])" TargetObjectsCriteriaMode="TrueForAll" />
       <Action Id="GNRL_NotificationRecipientConfig.ShowRecipient" Caption="Recipients" ImageName="BO_User" SelectionDependencyType="RequireSingleObject" TargetObjectsCriteria="[TargetType] Is Not Null" />
-      <Action Id="Notifications" ImageName="notification_notifications" Caption="" />
+      <Action Id="Notifications" ImageName="Action_Bell" Caption="" />
     </Actions>
     <ActionToContainerMapping>
       <ActionContainer Id="PopupActions">
@@ -18,7 +18,7 @@
     </ActionToContainerMapping>
   </ActionDesign>
   <BOModel>
-    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_Notification" Caption="Notification" ImageName="notification_notifications">
+    <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_Notification" Caption="Notification" ImageName="Action_Bell">
       <OwnMembers>
         <Member Name="ToUser" Caption="To" />
       </OwnMembers>
@@ -39,8 +39,8 @@
     <Class Name="ExpressApp.Module.Notification.BusinessObjects.GNRL_NotificationSchedule" Caption="Notification Schedule" />
   </BOModel>
   <SchemaModules>
-    <SchemaModule Name="CloneObjectModule" Version="23.2.4.0" IsNewNode="True" />
-    <SchemaModule Name="SystemModule" Version="23.2.4.0" IsNewNode="True" />
+    <SchemaModule Name="CloneObjectModule" Version="23.2.6.0" IsNewNode="True" />
+    <SchemaModule Name="SystemModule" Version="23.2.6.0" IsNewNode="True" />
   </SchemaModules>
   <Validation>
     <Rules>

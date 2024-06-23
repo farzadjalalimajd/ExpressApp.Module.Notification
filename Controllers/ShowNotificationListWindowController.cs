@@ -30,7 +30,7 @@ namespace ExpressApp.Module.Notification.Controllers
 
                 if (NotificationsAction is not null)
                 {
-                    NotificationsAction.Caption = notificationCoutner == 0 ? string.Empty : notificationCoutner.ToString();
+                    NotificationsAction.Caption = notificationCoutner.ToString();
                 }
             }
         }
