@@ -15,12 +15,14 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\Action_Bell.svg" />
+    <None Remove="Images\Action_Dismiss.svg" />
     <None Remove="Images\Action_DismissAll.svg" />
     <None Remove="Model.DesignedDiffs.Localization.fa-IR.xafml" />
     <None Remove="Model.DesignedDiffs.xafml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\Action_Bell.svg" />
+    <EmbeddedResource Include="Images\Action_Dismiss.svg" />
     <EmbeddedResource Include="Images\Action_DismissAll.svg" />
     <EmbeddedResource Include="Model.DesignedDiffs.Localization.fa-IR.xafml">
       <DependentUpon>Model.DesignedDiffs.xafml</DependentUpon>

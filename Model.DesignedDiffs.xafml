@@ -3,7 +3,7 @@
   <ActionDesign>
     <Actions>
       <Action Id="GNRL_Notification.OpenSource" Caption="Source" TargetObjectsCriteria="[ObjectHandle] Is Not Null" ImageName="Action_Open_Object" />
-      <Action Id="GNRL_Notification.Seen" Caption="Dismiss All" ImageName="Action_DismissAll" SelectionDependencyType="RequireMultipleObjects" TargetObjectsCriteria="[AlarmTime] Is Not Null" TargetObjectsCriteriaMode="TrueForAll" PaintStyle="Image" />
+      <Action Id="GNRL_Notification.Seen" Caption="Dismiss" ImageName="Action_Dismiss" SelectionDependencyType="RequireMultipleObjects" TargetObjectsCriteria="[AlarmTime] Is Not Null" TargetObjectsCriteriaMode="TrueForAll" PaintStyle="Image" />
       <Action Id="GNRL_NotificationConfig.EvaluateMessage" Caption="Evaluate" ImageName="ModelEditor_GenerateContent" SelectionDependencyType="RequireSingleObject" TargetObjectsCriteria="[TargetType] Is Not Null And Not IsNullOrEmpty([Message])" TargetObjectsCriteriaMode="TrueForAll" />
       <Action Id="GNRL_NotificationRecipientConfig.ShowRecipient" Caption="Recipients" ImageName="BO_User" SelectionDependencyType="RequireSingleObject" TargetObjectsCriteria="[TargetType] Is Not Null" />
       <Action Id="Notifications" ImageName="Action_Bell" Caption="" />
@@ -11,7 +11,6 @@
     <ActionToContainerMapping>
       <ActionContainer Id="PopupActions">
         <ActionLink ActionId="GNRL_Notification.OpenSource" IsNewNode="True" />
-        <ActionLink ActionId="GNRL_Notification.Seen" IsNewNode="True" />
         <ActionLink ActionId="GNRL_NotificationConfig.EvaluateMessage" IsNewNode="True" />
         <ActionLink ActionId="GNRL_NotificationRecipientConfig.ShowRecipient" IsNewNode="True" />
       </ActionContainer>
