@@ -3,7 +3,6 @@
   <ActionDesign>
     <Actions>
       <Action Id="GNRL_Notification.OpenSource" Caption="مرجع" />
-      <Action Id="GNRL_Notification.Seen" Caption="دیده شد" />
     </Actions>
   </ActionDesign>
   <BOModel>

@@ -12,10 +12,5 @@ public static class HostConsumerExtension
         {
             notificationScheduleWorker.Start();
         }
-
-        if (host.Services.GetRequiredService<IEmailNotificationService>() is IEmailNotificationService emailNotificationService)
-        {
-            emailNotificationService.RegisterEvents();
-        }
     }
 }
