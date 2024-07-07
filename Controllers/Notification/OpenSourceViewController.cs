@@ -29,7 +29,7 @@ namespace ExpressApp.Module.Notification.Controllers.Notification
 
             Frame.GetController<PopUpViewController>()?.CloseAll(View);
 
-            Application.MainWindow.SetView(view);
+            Application.ShowViewStrategy.ShowViewFromCommonView(view);
 
             if (new[] { TemplateContext.PopupWindow, TemplateContext.LookupWindow, TemplateContext.LookupWindow }.Contains(Frame.Context))
             {
