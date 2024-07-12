@@ -44,9 +44,9 @@
     <PackageReference Include="DevExpress.Persistent.BaseImpl.Xpo" Version="24.1.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExpressApp.Library\ExpressApp.Library.csproj" />
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\ExpressApp.Library\ExpressApp.Library.csproj" />
   </ItemGroup>
 </Project>
