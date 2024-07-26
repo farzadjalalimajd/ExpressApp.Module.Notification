@@ -2,7 +2,6 @@
 using DevExpress.ExpressApp.Actions;
 using DevExpress.ExpressApp.Utils;
 using DevExpress.Persistent.Base;
-using ExpressApp.Library.Controllers;
 using ExpressApp.Module.Notification.BusinessObjects;
 
 namespace ExpressApp.Module.Notification.Controllers.Notification

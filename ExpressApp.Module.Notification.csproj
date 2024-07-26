@@ -38,6 +38,7 @@
     <PackageReference Include="DevExpress.ExpressApp.ConditionalAppearance" Version="24.1.4" />
     <PackageReference Include="DevExpress.ExpressApp.Notifications" Version="24.1.4" />
     <PackageReference Include="DevExpress.ExpressApp.Objects" Version="24.1.4" />
+    <PackageReference Include="DevExpress.ExpressApp.Security" Version="24.1.4" />
     <PackageReference Include="DevExpress.ExpressApp.Validation" Version="24.1.4" />
     <PackageReference Include="DevExpress.ExpressApp.Xpo" Version="24.1.4" />
     <PackageReference Include="DevExpress.Persistent.Base" Version="24.1.4" />
@@ -45,8 +46,5 @@
   </ItemGroup>
   <ItemGroup>
 	<FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ExpressApp.Library\ExpressApp.Library.csproj" />
   </ItemGroup>
 </Project>

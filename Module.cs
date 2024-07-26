@@ -5,7 +5,6 @@ using DevExpress.ExpressApp.Notifications;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.Xpo;
-using ExpressApp.Library.Controllers;
 using ExpressApp.Module.Notification.BusinessObjects;
 
 namespace ExpressApp.Module.Notification;
@@ -23,8 +22,6 @@ public sealed class NotificationModule : ModuleBase
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.CloneObject.CloneObjectModule));
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.ConditionalAppearance.ConditionalAppearanceModule));
         RequiredModuleTypes.Add(typeof(DevExpress.ExpressApp.Validation.ValidationModule));
-
-        AdditionalControllerTypes.Add(typeof(PopUpViewController));
     }
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB)
     {
