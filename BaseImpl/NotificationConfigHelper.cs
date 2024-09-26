@@ -1,5 +1,5 @@
 ﻿using DevExpress.Data.Filtering;
-using DevExpress.ExpressApp.Core;
+using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.BaseImpl.PermissionPolicy;
 using ExpressApp.Module.Notification.Base;
@@ -56,7 +56,7 @@ public class NotificationConfigHelper : INotificationConfigHelper
                                 }
                             }
 
-                            var users = GetRecipients(recipient, parameters.ToArray());
+                            var users = GetRecipients(recipient, [.. parameters]);
 
                             foreach (var user in users)
                             {
@@ -156,7 +156,7 @@ public class NotificationConfigHelper : INotificationConfigHelper
                     }
                 }
 
-                if (usernameList.Any())
+                if (usernameList.Count != 0)
                 {
                     result = nonSecuredObjectSpace.GetObjectsQuery<PermissionPolicyUser>().Where(x => usernameList.Contains(x.UserName)).AsEnumerable().ToList();
                 }
@@ -186,7 +186,7 @@ public class NotificationConfigHelper : INotificationConfigHelper
         }
 
         var nonSecuredObjectSpace = nonSecuredObjectSpaceFactory.CreateNonSecuredObjectSpace(targetType);
-        var objects = nonSecuredObjectSpace.GetObjects(targetType, CriteriaOperator.TryParse(criteria, parameters.ToArray()));
+        var objects = nonSecuredObjectSpace.GetObjects(targetType, CriteriaOperator.TryParse(criteria, [.. parameters]));
 
         try
         {

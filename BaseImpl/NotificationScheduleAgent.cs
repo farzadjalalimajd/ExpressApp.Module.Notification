@@ -1,5 +1,5 @@
 ﻿using DevExpress.Data.Filtering;
-using DevExpress.ExpressApp.Core;
+using DevExpress.ExpressApp;
 using DevExpress.Persistent.Base;
 using DevExpress.Xpo;
 using ExpressApp.Module.Notification.Base;

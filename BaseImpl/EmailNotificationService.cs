@@ -1,16 +1,15 @@
 ﻿using DevExpress.Data.Filtering;
-using DevExpress.ExpressApp.Core;
+using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Services.Localization;
 using DevExpress.Persistent.Base;
 using ExpressApp.Module.Notification.Base;
 using ExpressApp.Module.Notification.BusinessObjects;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Concurrent;
-using System.Net.Mail;
-using System.Net;
 using Microsoft.Extensions.Options;
-using DevExpress.ExpressApp.Services.Localization;
+using System.Collections.Concurrent;
 using System.Globalization;
-using System.Web;
+using System.Net;
+using System.Net.Mail;
 
 namespace ExpressApp.Module.Notification.BaseImpl;
 

@@ -1,4 +1,4 @@
-﻿using DevExpress.ExpressApp.Core;
+﻿using DevExpress.ExpressApp;
 using DevExpress.Persistent.Base;
 using DevExpress.Persistent.BaseImpl.PermissionPolicy;
 using ExpressApp.Module.Notification.Base;
