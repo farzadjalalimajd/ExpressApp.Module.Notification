@@ -13,7 +13,7 @@ public static class RegisterServicesExtension
         serviceCollection.AddSingleton<INotificationScheduleAgent, NotificationScheduleAgent>();
 
         serviceCollection.AddOptions<SmtpClientOptions>()
-            .BindConfiguration("SmtpClientOptions");
+                         .BindConfiguration("SmtpClientOptions");
 
         return serviceCollection;
     }
