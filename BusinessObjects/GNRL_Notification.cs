@@ -35,8 +35,7 @@ public class GNRL_Notification : BaseObject, ISupportNotifications
         private set { SetPropertyValue(nameof(Message), value); }
     }
 
-    [SecurityBrowsable]
-    [Browsable(false)]
+    [HideInUI(HideInUI.ListViewColumn | HideInUI.ListViewCustomizationForm | HideInUI.DetailViewEditor | HideInUI.DetailViewCustomizationForm)]
     [Persistent("DateCreated")]
     [DbType("datetime2(0)")]
     public DateTime DateCreated
@@ -45,9 +44,7 @@ public class GNRL_Notification : BaseObject, ISupportNotifications
         private set { SetPropertyValue(nameof(DateCreated), value); }
     }
 
-    [VisibleInDetailView(false)]
-    [VisibleInListView(false)]
-    [VisibleInLookupListView(false)]
+    [HideInUI(HideInUI.ListViewColumn | HideInUI.ListViewCustomizationForm | HideInUI.DetailViewEditor | HideInUI.DetailViewCustomizationForm)]
     [NoForeignKey]
     [Persistent("ToApplicationUser")]
     public PermissionPolicyUser ToUser
@@ -56,8 +53,7 @@ public class GNRL_Notification : BaseObject, ISupportNotifications
         private set { SetPropertyValue(nameof(ToUser), value); }
     }
 
-    [SecurityBrowsable]
-    [Browsable(false)]
+    [HideInUI(HideInUI.ListViewColumn | HideInUI.ListViewCustomizationForm | HideInUI.DetailViewEditor | HideInUI.DetailViewCustomizationForm)]
     [Persistent("IsDelivered")]
     [DbType("bit")]
     public bool IsDelivered
@@ -66,8 +62,7 @@ public class GNRL_Notification : BaseObject, ISupportNotifications
         private set { SetPropertyValue(nameof(IsDelivered), value); }
     }
 
-    [SecurityBrowsable]
-    [Browsable(false)]
+    [HideInUI(HideInUI.ListViewColumn | HideInUI.ListViewCustomizationForm | HideInUI.DetailViewEditor | HideInUI.DetailViewCustomizationForm)]
     [Persistent("ObjectHandle")]
     [DbType("varchar(max)")]
     public string ObjectHandle
@@ -79,8 +74,7 @@ public class GNRL_Notification : BaseObject, ISupportNotifications
     /// <summary>
     /// Three state property, it is null if this notification doesn't need email notification
     /// </summary>
-    [SecurityBrowsable]
-    [Browsable(false)]
+    [HideInUI(HideInUI.ListViewColumn | HideInUI.ListViewCustomizationForm | HideInUI.DetailViewEditor | HideInUI.DetailViewCustomizationForm)]
     [Persistent("IsEmailed")]
     [DbType("bit")]
     public bool? IsEmailed
@@ -100,8 +94,7 @@ public class GNRL_Notification : BaseObject, ISupportNotifications
         private set { SetPropertyValue(nameof(AlarmTime), value); }
     }
 
-    [SecurityBrowsable]
-    [Browsable(false)]
+    [HideInUI(HideInUI.ListViewColumn | HideInUI.ListViewCustomizationForm | HideInUI.DetailViewEditor | HideInUI.DetailViewCustomizationForm)]
     [Persistent("IsPostponed")]
     [DbType("bit")]
     public bool IsPostponed
