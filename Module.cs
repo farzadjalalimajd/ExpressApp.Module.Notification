@@ -5,7 +5,10 @@ using DevExpress.ExpressApp.Notifications;
 using DevExpress.ExpressApp.SystemModule;
 using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.Xpo;
+using ExpressApp.Module.Notification.Base;
 using ExpressApp.Module.Notification.BusinessObjects;
+using ExpressApp.Module.Notification.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ExpressApp.Module.Notification;
 
@@ -37,6 +40,15 @@ public sealed class NotificationModule : ModuleBase
         auditService.CustomizeAuditTrailSettings += AuditService_CustomizeAuditTrailSettings;
 
         application.LoggedOn += Application_LoggedOn;
+        application.SetupComplete += Application_SetupComplete;
+    }
+
+    private void Application_SetupComplete(object sender, EventArgs e)
+    {
+        if (Application.ServiceProvider.GetRequiredService<INotificationScheduleAgent>() is INotificationScheduleAgent notificationScheduleWorker)
+        {
+            notificationScheduleWorker.Start();
+        }
     }
 
     private void Application_LoggedOn(object sender, LogonEventArgs e)
