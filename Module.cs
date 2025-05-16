@@ -29,7 +29,7 @@ public sealed class NotificationModule : ModuleBase
     public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB)
     {
         ModuleUpdater updater = new DatabaseUpdate.Updater(objectSpace, versionFromDB);
-        return new ModuleUpdater[] { updater };
+        return [updater];
     }
     public override void Setup(XafApplication application)
     {
@@ -45,9 +45,12 @@ public sealed class NotificationModule : ModuleBase
 
     private void Application_SetupComplete(object sender, EventArgs e)
     {
-        if (Application.ServiceProvider.GetRequiredService<INotificationScheduleAgent>() is INotificationScheduleAgent notificationScheduleWorker)
+        if (!System.Diagnostics.Debugger.IsAttached)
         {
-            notificationScheduleWorker.Start();
+            if (Application.ServiceProvider.GetRequiredService<INotificationScheduleAgent>() is INotificationScheduleAgent notificationScheduleWorker)
+            {
+                notificationScheduleWorker.Start();
+            }
         }
     }
 
